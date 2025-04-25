@@ -1,59 +1,25 @@
-# Autoencoder untuk Dataset Gambar
-
-Proyek ini mengimplementasikan model Autoencoder untuk memproses dataset gambar kustom, di mana gambar input dan target berbeda. Tujuannya adalah untuk melatih Autoencoder agar dapat mempelajari representasi terkompresi dari gambar dan menghasilkan gambar output yang mirip dengan gambar target.
+# Autoencoder Image Reconstruction
 
 ## Dataset
+Dataset yang digunakan adalah dataset gambar kategori **Cats vs Dogs**. Dataset ini berisi gambar hewan kucing dan anjing yang digunakan untuk melatih model autoencoder.
 
-Dataset yang digunakan dalam proyek ini terdiri dari gambar kucing dan anjing. Gambar-gambar tersebut diorganisir dalam struktur berikut:
+## Arsitektur Autoencoder
+Model autoencoder ini menggunakan arsitektur **Convolutional Neural Networks (CNN)** pada encoder dan decoder untuk melakukan kompresi dan rekonstruksi gambar. Model ini bertujuan untuk mengurangi dimensi gambar input dan kemudian memulihkannya.
 
-- **Gambar Input (kucing)**: `/content/dataset/test_set/test_set/cats/`
-- **Gambar Target (anjing)**: `/content/dataset/test_set/test_set/dogs/`
+## Hasil dan Performa
+Pada pelatihan, model berhasil menurunkan nilai **loss** secara signifikan. Berikut adalah hasil rekonstruksi dari gambar input.
 
-Gambar-gambar tersebut diubah ukurannya menjadi resolusi 128x128 dan dikonversi menjadi grayscale untuk gambar input. Gambar target tetap dalam format RGB aslinya.
+### Input Image
+![Input Image](assets/input.png)
 
-## Arsitektur Model
+### Output Image (Reconstructed)
+![Output Image](assets/output.png)
 
-Model Autoencoder yang digunakan terdiri dari komponen-komponen berikut:
+### Target Image
+![Target Image](assets/target.png)
 
-1. **Encoder**:
-    - Lapisan konvolusional yang melakukan downsampling gambar.
-    - Lapisan linier untuk lebih mengurangi dimensi gambar.
+## Performa
+Loss function yang digunakan adalah **Mean Squared Error (MSE)**, dan model menunjukkan penurunan loss yang stabil selama pelatihan.
 
-2. **Bottleneck (Representasi Latent)**:
-    - Representasi kompak dan terkompresi dari gambar input.
-
-3. **Decoder**:
-    - Sekumpulan lapisan konvolusional terbalik yang membangun kembali gambar dari representasi latent.
-
-Model ini dilatih untuk meminimalkan perbedaan antara gambar output yang direkonstruksi dan gambar target menggunakan fungsi loss Mean Squared Error (MSE).
-
-## Pelatihan
-
-Untuk melatih model, langkah-langkah berikut dilakukan:
-
-1. Menentukan transformasi untuk gambar input dan target (mengubah ukuran, mengonversi menjadi tensor, dan normalisasi).
-2. Memuat dataset ke dalam kelas `Dataset` kustom yang memasangkan gambar input dan target.
-3. Melatih model Autoencoder menggunakan dataset dengan optimizer standar (Adam) dan fungsi loss (MSE loss).
-
-### Kode Pelatihan:
-
-```python
-# Contoh loop pelatihan
-
-for epoch in range(num_epochs):
-    running_loss = 0.0
-    for i, (input_images, target_images) in enumerate(dataloader):
-        # Forward pass
-        output_images = model(input_images)
-        
-        # Hitung loss
-        loss = criterion(output_images, target_images)
-        
-        # Backpropagation
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-        
-        running_loss += loss.item()
-    
-    print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(dataloader)}')
+### Loss Graph
+![Loss Graph](assets/loss_graph.png)
